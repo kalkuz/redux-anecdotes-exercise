@@ -1,34 +1,46 @@
-import { useSelector, useDispatch } from 'react-redux'
+/* eslint-disable no-param-reassign */
+import { useSelector, useDispatch } from 'react-redux';
+import _ from 'lodash';
+import AnecdoteList from './components/AnecdoteList';
+import AnecdoteForm from './components/AnecdoteForm';
 
-const App = () => {
-  const anecdotes = useSelector(state => state)
-  const dispatch = useDispatch()
+function App() {
+  const anecdotes = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  const NewAnecdote = (content) => ({
+    type: 'NEW_ANECDOTE',
+    data: {
+      content,
+      votes: 0,
+    },
+  });
+
+  const AddAnecdote = (event) => {
+    event.preventDefault();
+    const content = event.target.anecdote.value;
+    event.target.anecdote.value = '';
+    dispatch(NewAnecdote(content));
+  };
 
   const vote = (id) => {
-    console.log('vote', id)
-  }
+    console.log('vote', id);
+    dispatch({
+      type: 'VOTE',
+      data: {
+        id,
+      },
+    });
+  };
 
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
-        <div key={anecdote.id}>
-          <div>
-            {anecdote.content}
-          </div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
-          </div>
-        </div>
-      )}
+      <AnecdoteList anecdotes={anecdotes} onVote={vote} />
       <h2>create new</h2>
-      <form>
-        <div><input /></div>
-        <button>create</button>
-      </form>
+      <AnecdoteForm onSubmit={AddAnecdote} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
