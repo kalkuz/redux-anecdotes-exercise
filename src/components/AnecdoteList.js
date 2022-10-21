@@ -1,13 +1,10 @@
 import _ from 'lodash';
+import Filter from './Filter';
 
 function AnecdoteList({ anecdotes, onVote, onFilterChanged }) {
   return (
     <>
-      <div>
-        Filter:
-        {' '}
-        <input onChange={(e) => onFilterChanged(e.target.value)} />
-      </div>
+      <Filter onFilterChanged={onFilterChanged} />
       {_.orderBy(anecdotes, 'votes', 'desc').map((anecdote) => (
         <div key={anecdote.id}>
           <div>

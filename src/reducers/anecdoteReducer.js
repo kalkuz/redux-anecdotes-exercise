@@ -31,7 +31,7 @@ const reducer = (state = [], action) => {
     case 'VOTE': {
       const anecdote = state.find((a) => a.id === action.data.id);
       anecdote.votes += 1;
-      put(`/anecdotes/${anecdote.id}`, { votes: anecdote.votes });
+      put(`/anecdotes/${anecdote.id}`, { content: anecdote.content, votes: anecdote.votes });
       return state.map((a) => (a.id === action.data.id ? anecdote : a));
     }
     case 'NEW_ANECDOTE': {
