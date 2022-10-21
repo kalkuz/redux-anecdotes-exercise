@@ -1,3 +1,5 @@
+import { post, put } from '../services/api';
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -18,18 +20,24 @@ const asObject = (anecdote) => ({
 const initialState = anecdotesAtStart.map(asObject);
 
 // eslint-disable-next-line default-param-last
-const reducer = (state = initialState, action) => {
+const reducer = (state = [], action) => {
   console.log('state now: ', state);
   console.log('action', action);
 
   switch (action.type) {
+    case 'SET_ANECDOTES': {
+      return action.data;
+    }
     case 'VOTE': {
       const anecdote = state.find((a) => a.id === action.data.id);
       anecdote.votes += 1;
+      put(`/anecdotes/${anecdote.id}`, { votes: anecdote.votes });
       return state.map((a) => (a.id === action.data.id ? anecdote : a));
     }
     case 'NEW_ANECDOTE': {
-      return [...state, { ...action.data, id: getId() }];
+      const newAnecdote = { ...action.data, id: getId() };
+      post('/anecdotes', newAnecdote);
+      return [...state, newAnecdote];
     }
     default:
       break;

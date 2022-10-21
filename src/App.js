@@ -7,6 +7,7 @@ import AnecdoteForm from './components/AnecdoteForm';
 import Notification from './components/Notification';
 import { notifChange } from './reducers/notificationReducer';
 import { filterChange } from './reducers/filterReducer';
+import { get } from './services/api';
 
 function App() {
   const [notified, setNotified] = useState(false);
@@ -27,6 +28,10 @@ function App() {
       clearTimeout(id);
     };
   }, [notified]);
+
+  useEffect(() => {
+    get('/anecdotes').then(({ data }) => dispatch({ type: 'SET_ANECDOTES', data })).catch((err) => console.log(err));
+  }, []);
 
   const NewAnecdote = (content) => ({
     type: 'NEW_ANECDOTE',
